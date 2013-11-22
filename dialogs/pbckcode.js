@@ -6,11 +6,10 @@ CKEDITOR.dialog.add('pbckcodeDialog', function ( editor ) {
     if(editor.config.pbckcode === undefined) {
         editor.config.pbckcode = {};
     }
-
     // default settings object
     var DEFAULT_SETTINGS = {
         cls   : '',
-        modes :  [ ['HTML', 'html'], ['CSS', 'css'], ['PHP', 'php'], ['JS', 'javascript'] ],
+        modes :  editor.config.pbckcode_filetypes,
         theme : 'textmate'
     };
 

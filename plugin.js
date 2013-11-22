@@ -28,8 +28,22 @@ CKEDITOR.plugins.add('pbckcode', {
         // init a new id to the code element for ACE Editor
         editor.codeId = Math.random().toString(36).substring(3);
 
+        // global file-types
+        editor.config.pbckcode_filetypes = [
+            ['HTML', 'html'], ['CSS', 'css'], ['PHP', 'php'], ['JS', 'javascript']
+        ];
+
+        // protect the pre/attribute
+        var require = ['pre(prettyprint)', 'pre[data-pbcklang]'];
+        var arr = editor.config.pbckcode_filetypes, i = 0, len = arr.length;
+        for(; i < len; i++){
+            require.push('pre(' + arr[i][1] + ')')
+        }
+        arr = i = len = null;
+
         editor.addCommand('pbckcodeCommand', new CKEDITOR.dialogCommand('pbckcodeDialog', {
-            allowedContent: 'pre[*]{*}(*)'
+            allowedContent : require,
+            requiredContent : require
         }));
 
         editor.ui.addButton('pbckcode', {
