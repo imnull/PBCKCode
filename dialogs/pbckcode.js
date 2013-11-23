@@ -6,10 +6,10 @@ CKEDITOR.dialog.add('pbckcodeDialog', function ( editor ) {
     if(editor.config.pbckcode === undefined) {
         editor.config.pbckcode = {};
     }
+    
     // default settings object
     var DEFAULT_SETTINGS = {
-        cls   : '',
-        modes :  editor.config.pbckcode_filetypes,
+        modes : [ ['HTML', 'html'], ['CSS', 'css'], ['PHP', 'php'], ['JS', 'javascript'] ],
         theme : 'textmate'
     };
 
@@ -123,6 +123,7 @@ CKEDITOR.dialog.add('pbckcodeDialog', function ( editor ) {
         },
         // This method is invoked once a user clicks the OK button, confirming the dialog.
         onOk : function() {
+
             var pre, element;
             pre = element = this.element;
 
@@ -137,7 +138,7 @@ CKEDITOR.dialog.add('pbckcodeDialog', function ( editor ) {
             this.commitContent(element);
 
             // set the full class to the code tag
-            shighlighter.setCls(pre.getAttribute("data-pbcklang") + " " + settings.cls);
+            shighlighter.setCls(pre.getAttribute("data-pbcklang") + " " + (settings.cls || ''));
 
             element.setAttribute('class', shighlighter.getCls());
 

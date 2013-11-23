@@ -1,6 +1,6 @@
 CKEDITOR.plugins.add('pbckcode', {
     icons: 'pbckcode',
-    lang : ['fr', 'en'],
+    lang : ['zh-cn', 'fr', 'en'],
     init: function(editor) {
 
         // load JS file
@@ -28,18 +28,37 @@ CKEDITOR.plugins.add('pbckcode', {
         // init a new id to the code element for ACE Editor
         editor.codeId = Math.random().toString(36).substring(3);
 
-        // global file-types
-        editor.config.pbckcode_filetypes = [
-            ['HTML', 'html'], ['CSS', 'css'], ['PHP', 'php'], ['JS', 'javascript']
-        ];
-
-        // protect the pre/attribute
-        var require = ['pre(prettyprint)', 'pre[data-pbcklang]'];
-        var arr = editor.config.pbckcode_filetypes, i = 0, len = arr.length;
-        for(; i < len; i++){
-            require.push('pre(' + arr[i][1] + ')')
+        // fix array indexOf
+        function indexOfArray(arr, val){
+            if('indexOf' in arr) return arr.indexOf(val);
+            var i = 0, len = arr.length;
+            for(; i < len; i++){
+                if(arr[i] === val) return i;
+            }
+            return -1;
         }
-        arr = i = len = null;
+
+        // protect pre[data-pbcklang]
+        var require = ['pre[data-pbcklang]'], __protect = function (cls){
+            var prt, index;
+            if(!cls || (index = indexOfArray(require, prt = 'pre(' + cls + ')')) > -1) return;
+            require.push(prt);
+        }
+
+        if(!editor.config.pbckcode){
+            editor.config.pbckcode = {};
+        }
+        if(!('modes' in editor.config.pbckcode)){
+            editor.config.pbckcode.modes = [ ['HTML', 'html'], ['CSS', 'css'], ['PHP', 'php'], ['JS', 'javascript'] ];
+        }
+        if(!!editor.config.pbckcode.cls){
+            __protect(editor.config.pbckcode.cls);
+        }
+        var arr = editor.config.pbckcode.modes, i = 0, len = arr.length;
+        for(; i < len; i++){
+            __protect(arr[i][1]);
+        }
+        arr = null;
 
         editor.addCommand('pbckcodeCommand', new CKEDITOR.dialogCommand('pbckcodeDialog', {
             allowedContent : require,
